@@ -9,8 +9,8 @@
 import Foundation
 import CoreMIDI
 
-struct LMIDIObject {
-    static func getIntegerProperty(name: CFString, on object: MIDIObjectRef) -> Int {
+public struct LMIDIObject {
+    public static func getIntegerProperty(name: CFString, on object: MIDIObjectRef) -> Int {
         var result = Int32(-1)
         guard MIDIObjectGetIntegerProperty(object, name, &result) == noErr else {
             return -1
@@ -18,7 +18,7 @@ struct LMIDIObject {
         return Int(result)
     }
     
-    static func getStringProperty(name: CFString, on object: MIDIObjectRef) -> String? {
+    public static func getStringProperty(name: CFString, on object: MIDIObjectRef) -> String? {
         var result: Unmanaged<CFString>?
         guard MIDIObjectGetStringProperty(object, name, &result) == noErr else {
             return nil
@@ -26,7 +26,7 @@ struct LMIDIObject {
         return result?.takeRetainedValue() as String?
     }
     
-    static func getDataProperty(name: CFString, on object: MIDIObjectRef) -> Data? {
+    public static func getDataProperty(name: CFString, on object: MIDIObjectRef) -> Data? {
         var result: Unmanaged<CFData>?
         guard MIDIObjectGetDataProperty(object, name, &result) == noErr else {
             return nil
@@ -34,7 +34,7 @@ struct LMIDIObject {
         return result?.takeRetainedValue() as Data?
     }
     
-    static func getDictionaryProperty(name: CFString, on object: MIDIObjectRef) -> [AnyHashable : Any]? {
+    public static func getDictionaryProperty(name: CFString, on object: MIDIObjectRef) -> [AnyHashable : Any]? {
         var result: Unmanaged<CFDictionary>?
         guard MIDIObjectGetDictionaryProperty(object, name, &result) == noErr else {
             return nil

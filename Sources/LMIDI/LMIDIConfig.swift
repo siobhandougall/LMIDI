@@ -9,11 +9,11 @@
 import Foundation
 import CoreMIDI
 
-class LMIDIConfig {
+public class LMIDIConfig {
     private static var sharedInstances = [String: LMIDIConfig]()
     var client = MIDIClientRef()
     
-    class func shared(name: String) -> LMIDIConfig {
+    public class func shared(name: String) -> LMIDIConfig {
         if LMIDIConfig.sharedInstances[name] == nil {
             LMIDIConfig.sharedInstances[name] = LMIDIConfig(name: name)
         }
@@ -27,7 +27,7 @@ class LMIDIConfig {
         }
     }
     
-    var inputSources: [LMIDISource] {
+    public var inputSources: [LMIDISource] {
         var result = [LMIDISource]()
         let count = MIDIGetNumberOfSources()
         for i in 0..<count {
@@ -37,7 +37,7 @@ class LMIDIConfig {
         return result
     }
     
-    var outputDestinations: [LMIDIDestination] {
+    public var outputDestinations: [LMIDIDestination] {
         var result = [LMIDIDestination]()
         let count = MIDIGetNumberOfDestinations()
         for i in 0..<count {

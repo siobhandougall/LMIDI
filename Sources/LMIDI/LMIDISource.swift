@@ -9,10 +9,10 @@
 import Foundation
 import CoreMIDI
 
-struct LMIDISource {
-    let endpoint: MIDIEndpointRef
-    let config: LMIDIConfig
-    var name: String {
+public struct LMIDISource {
+    public let endpoint: MIDIEndpointRef
+    public let config: LMIDIConfig
+    public var name: String {
         get {
             return endpoint.displayName
         }

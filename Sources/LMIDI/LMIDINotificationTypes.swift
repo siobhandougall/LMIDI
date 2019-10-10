@@ -9,7 +9,7 @@
 import Foundation
 import CoreMIDI
 
-enum LMIDIConfigNotification: String {
+public enum LMIDIConfigNotification: String {
     case setupChanged = "LMIDIConfigSetupChangedNotification"
     case objectAdded = "LMIDIConfigObjectAddedNotification"
     case objectRemoved = "LMIDIConfigObjectRemovedNotification"

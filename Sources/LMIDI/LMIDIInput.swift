@@ -9,12 +9,12 @@
 import Foundation
 import CoreMIDI
 
-class LMIDIInput {
-    let source: LMIDISource
+public class LMIDIInput {
+    public let source: LMIDISource
     private let portName: String
     private var port: MIDIPortRef
     private var listenBlock: ([LMIDIMessage]) -> ()
-    init(source: LMIDISource, portName: String) throws {
+    public init(source: LMIDISource, portName: String) throws {
         self.source = source
         self.portName = portName
         self.port = MIDIPortRef()
@@ -45,7 +45,7 @@ class LMIDIInput {
         }
     }
     
-    func listen(_ block: @escaping ([LMIDIMessage]) -> ()) throws {
+    public func listen(_ block: @escaping ([LMIDIMessage]) -> ()) throws {
         self.listenBlock = block
         
         let connectErr = MIDIPortConnectSource(self.port, self.source.endpoint, nil)
@@ -54,7 +54,7 @@ class LMIDIInput {
         }
     }
     
-    func stop() {
+    public func stop() {
         self.listenBlock = { messages in }
         if self.port != 0 {
             MIDIPortDisconnectSource(self.port, self.source.endpoint)

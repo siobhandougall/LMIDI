@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum LMIDIError: Error {
+public enum LMIDIError: Error {
     case cannotCreate(code: OSStatus)
     case cannotConnect(code: OSStatus)
 }

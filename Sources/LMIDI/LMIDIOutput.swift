@@ -9,11 +9,11 @@
 import Foundation
 import CoreMIDI
 
-class LMIDIOutput {
-    let destination: LMIDIDestination
+public class LMIDIOutput {
+    public let destination: LMIDIDestination
     private var port: MIDIPortRef
     
-    init(destination: LMIDIDestination, portName: String) throws {
+    public init(destination: LMIDIDestination, portName: String) throws {
         self.destination = destination
         self.port = MIDIPortRef()
         
@@ -29,7 +29,7 @@ class LMIDIOutput {
         }
     }
 
-    func send(_ message: LMIDIMessage) {
+    public func send(_ message: LMIDIMessage) {
         // TODO: Construct a MIDIPacketList from multiple messages to guarantee "simultaneous" delivery.
         // This is either extraordinarily convoluted, or completely impossible, in the Swift interface.
         var packetList = MIDIPacketList(numPackets: 1, packet: (message.asPacket()))
