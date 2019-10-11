@@ -20,7 +20,7 @@ Could likely be updated to support iOS; haven't delved into that yet.
 
 ## Basic usage
 
-LMIDI's operation is coordinated by a central `LMIDIConfig` class. You can instantiate this with `LMIDIConfig.shared(name:)`. The same config object will be used for subsequent calls that are passed the same `name` parameter.
+LMIDI's operation is coordinated by a central `LMIDIConfig` class, which you can instantiate with `LMIDIConfig(name:)`. You can instantiate more than one of these (one per document, for example) if desired; each will maintain an instance of `MIDIClient` under the hood. 
 
 Get all avaliable inputs and outputs with `config.inputSources` and `config.outputDestinations`. These are instances of `LMIDISource` and `LMIDIDestination`, which roughly wrap Core MIDI's `MIDIEndpointRef`.
 

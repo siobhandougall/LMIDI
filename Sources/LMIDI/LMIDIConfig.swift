@@ -10,17 +10,9 @@ import Foundation
 import CoreMIDI
 
 public class LMIDIConfig {
-    private static var sharedInstances = [String: LMIDIConfig]()
     var client = MIDIClientRef()
     
-    public class func shared(name: String) -> LMIDIConfig {
-        if LMIDIConfig.sharedInstances[name] == nil {
-            LMIDIConfig.sharedInstances[name] = LMIDIConfig(name: name)
-        }
-        return LMIDIConfig.sharedInstances[name]!
-    }
-    
-    private init(name: String) {
+    public init(name: String) {
         MIDIClientCreateWithBlock(name as CFString, &self.client) { notePtr in
             let notification = LMIDIConfigNotification(notePtr.pointee)
             NotificationCenter.default.post(Notification(midiConfigNotification: notification))
