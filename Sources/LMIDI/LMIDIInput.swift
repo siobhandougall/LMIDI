@@ -9,11 +9,17 @@
 import Foundation
 import CoreMIDI
 
+/// An object that manages input from a single source.
 public class LMIDIInput {
+    
+    /// The MIDI source to which this input will connect when listening.
     public let source: LMIDISource
+    
     private let portName: String
     private var port: MIDIPortRef
     private var listenBlock: ([LMIDIMessage]) -> ()
+    
+    /// Instantiate an input using the given port name, to be attached to the given source. Does not automatically start listening. Call `listen(_:)` and `stop()` to start and stop.
     public init(source: LMIDISource, portName: String) throws {
         self.source = source
         self.portName = portName
@@ -45,6 +51,7 @@ public class LMIDIInput {
         }
     }
     
+    /// Begin listening to input, calling the provided block for each group of messages received.
     public func listen(_ block: @escaping ([LMIDIMessage]) -> ()) throws {
         self.listenBlock = block
         
@@ -54,6 +61,7 @@ public class LMIDIInput {
         }
     }
     
+    /// Stop listening. This disconnects the underlying MIDI port, but does not dispose of it.
     public func stop() {
         self.listenBlock = { messages in }
         if self.port != 0 {

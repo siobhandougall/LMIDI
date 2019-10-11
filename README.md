@@ -1,6 +1,6 @@
 # LMIDI
 
-A minimalist MIDI I/O library for Swift
+A minimalist MIDI I/O library for Swift, extracted from [Lapis](https://lapis.app/)
 
 ## License: MIT
 
@@ -38,6 +38,12 @@ Sending output:
 
     let destination: LMIDIDestination = ...
     let output = try LMIDIOutput(destination: destination, portName: "Output 1") // keep this instance around too
-    output.send(.noteOn(channel: 4, note: 64, velocity: 127)) // note: channel numbers are 0-15, not 1-16
+    output.send(.noteOn(channel: 4, note: 64, velocity: 127))
 
 MIDI message types are enumerated by `LMIDIMessage`. This includes SysEx messages, whose associated data is an array of the bytes contained in the message (not including the opening `F0` or the closing `F7`).
+
+Note that channel numbers range from 0-15 (matching the MIDI data), not 1-16 (matching traditional UI display). You will need to add 1 to the channel number when formatting for display to the user. 
+
+## Known issues
+
+`LMIDIConfig` is meant to provide notifications of changes in configuration state; this is not yet implemented.

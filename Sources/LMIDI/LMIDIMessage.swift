@@ -13,26 +13,90 @@ import CoreMIDI
 
 typealias LMIDIByteTuple256 = (UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8, UInt8)
 
+/// A single MIDI message and its associated data.
 public enum LMIDIMessage {
-    case unknown
+    /// An unknown MIDI message type.
+    /// - `dataByteValue`: Contains the offending data byte, for reference.
+    case unknown(dataByteValue: UInt)
+    
+    /// A note-on message.
+    /// - `channel`: ranges from 0-15.
+    /// - `note`: MIDI note number.
+    /// - `velocity`: attack velocity. As with all MIDI considerations, a note-on with a velocity of 0 must be interpreted as a note-off.
     case noteOn(channel: UInt, note: UInt, velocity: UInt)
+    
+    /// A note-off message.
+    /// - `channel`: ranges from 0-15.
+    /// - `note`: MIDI note number.
+    /// - `velocity`: release velocity.
     case noteOff(channel: UInt, note: UInt, velocity: UInt)
+    
+    /// An aftertouch pressure message.
+    /// - `channel`: ranges from 0-15.
+    /// - `note`: MIDI note number.
+    /// - `pressure`: aftertouch pressure value.
     case aftertouch(channel: UInt, note: UInt, pressure: UInt)
+        
+    /// A MIDI controller (cc) message.
+    /// - `channel`: ranges from 0-15.
+    /// - `number`: MIDI controller number.
+    /// - `value`: the value of this controller message.
+    /// Note: NRPN messages are treated as separate controller changes. Reconstructing them is left to the caller.
     case controller(channel: UInt, number: UInt, value: UInt)
+    
+    /// A program change message.
+    /// - `channel`: ranges from 0-15.
+    /// - `number`: program number.
     case programChange(channel: UInt, number: UInt)
+    
+    /// A channel pressure message.
+    /// - `channel`: ranges from 0-15.
+    /// - `pressure`: channel pressure value.
     case channelPressure(channel: UInt, pressure: UInt)
+    
+    /// A pitch wheel message.
+    /// - `channel`: ranges from 0-15.
+    /// - `value`: ranges from -8192 to 8191. Call `.normalizedPitchValue` to extract the value as a Double in the range [-1.0, 1.0).
     case pitchWheel(channel: UInt, value: UInt)
+    
+    /// A system exclusive (SysEx) message.
+    /// - `bytes`: the message data. Does not include the opening `F0` or closing `F7` bytes that delineate all SysEx messages.
     case sysEx(bytes: [UInt8])
+    
+    /// A MIDI Time Code quarter frame message.
+    /// - `value`: the raw value of the data byte. Parsing is left up to the caller.
     case mtcQuarterFrame(value: UInt)
+    
+    /// A Song Position Pointer message
+    /// - `midiBeat`: the MIDI beat (i.e. 16th note) parsed from the two data bytes.
     case songPositionPointer(midiBeat: UInt)
+    
+    /// A Song Select message.
+    /// - `number`: The song number being selected.
     case songSelect(number: UInt)
+    
+    /// A Tune Request message.
     case tuneRequest
+    
+    /// A MIDI Clock message. Indicates passage of 1/24 of a quarter note.
     case clock
+    
+    /// A MIDI Tick message. Indicates passage of 10 milliseconds on the sender's clock.
     case tick
+    
+    /// A MIDI Start message. Starts the selected sequence from beat 0.
     case start
+    
+    /// A MIDI Continue message. Starts the selected sequence from the current time.
     case `continue`
+    
+    /// A MIDI Stop message.
     case stop
+    
+    /// An Active Sense message. Senders may send a message every 300 ms to ping the connection.
     case activeSense
+    
+    /// A Reset message.
     case reset
     
     static func fromRawPacket(_ packet: MIDIPacket) -> [LMIDIMessage] {
@@ -50,7 +114,6 @@ public enum LMIDIMessage {
         return result
     }
     
-    /** Returns: A message and the number of bytes read */
     private static func parse(rawPacketData data: [UInt8]) -> LMIDIMessage {
         let channelNibble = UInt(data[0] & 0x0f)
         switch data[0] {
@@ -93,7 +156,7 @@ public enum LMIDIMessage {
         case 0xff:
             return .reset
         default:
-            return .unknown
+            return .unknown(dataByteValue: UInt(data[0]))
         }
     }
     
@@ -127,7 +190,8 @@ public enum LMIDIMessage {
             }
         }
     }
-
+    
+    /// Maps the associated pitch wheel value to a Double in a range of [-1.0, 1.0). Applies to pitch wheel events only.
     public var normalizedPitchValue: Double {
         guard case .pitchWheel(_, let value) = self else {
             return 0.0
@@ -135,7 +199,13 @@ public enum LMIDIMessage {
         return (Double(value) - Double(0x2000)) / Double(0x2000)
     }
     
+    /// Constructs a Core MIDI packet struct from this message, with a timestamp of 0 (i.e. immediate).
     public func asPacket() -> MIDIPacket {
+        return self.asPacket(timeStamp: 0)
+    }
+    
+    /// Constructs a Core MIDI packet struct from this message, with the given timestamp.
+    public func asPacket(timeStamp: MIDITimeStamp) -> MIDIPacket {
         var bytes = [UInt8](repeating: 0, count: 256)
         switch self {
         case .noteOn(let channel, let note, let velocity):
@@ -203,6 +273,6 @@ public enum LMIDIMessage {
             return ptr.pointee
         }
         
-        return MIDIPacket(timeStamp: 0, length: UInt16(self.byteCount), data: data)
+        return MIDIPacket(timeStamp: timeStamp, length: UInt16(self.byteCount), data: data)
     }
 }

@@ -9,9 +9,11 @@
 import Foundation
 import CoreMIDI
 
+/// The centralized configuration controller for one MIDI client instance. Generally one LMIDIConfig object should be instantiated per context (e.g. per open document).
 public class LMIDIConfig {
     var client = MIDIClientRef()
     
+    /// Creates a new config instance. This manages ports and connections, so be sure to retain this reference.
     public init(name: String) {
         MIDIClientCreateWithBlock(name as CFString, &self.client) { notePtr in
             let notification = LMIDIConfigNotification(notePtr.pointee)
@@ -19,6 +21,7 @@ public class LMIDIConfig {
         }
     }
     
+    /// A list of all currently available MIDI sources.
     public var inputSources: [LMIDISource] {
         var result = [LMIDISource]()
         let count = MIDIGetNumberOfSources()
@@ -29,6 +32,7 @@ public class LMIDIConfig {
         return result
     }
     
+    /// A list of all currently available MIDI destinations.
     public var outputDestinations: [LMIDIDestination] {
         var result = [LMIDIDestination]()
         let count = MIDIGetNumberOfDestinations()

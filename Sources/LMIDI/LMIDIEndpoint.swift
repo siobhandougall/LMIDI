@@ -10,6 +10,7 @@ import Foundation
 import CoreMIDI
 
 public extension MIDIEndpointRef {
+    /// A convenience accessor for the endpoint's `kMIDIPropertyDisplayName` property.
     var displayName: String {
         get {
             if let name = LMIDIObject.getStringProperty(name: kMIDIPropertyDisplayName, on: self as MIDIObjectRef) {
