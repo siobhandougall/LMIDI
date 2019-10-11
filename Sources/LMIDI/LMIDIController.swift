@@ -113,3 +113,25 @@ public enum LMIDIController: UInt {
         }
     }
 }
+
+extension LMIDIController {
+    /// If this controller is a coarse type, returns its corresponding fine controller type, otherwise returns nil.
+    public var fineCounterpart: LMIDIController? {
+        switch self {
+        case .bankSelect: return .bankSelectFine
+        case .modWheel: return .modWheelFine
+        case .breath: return .breathFine
+        case .footPedal: return .footPedalFine
+        case .portamentoTime: return .portamentoTimeFine
+        case .dataEntry: return .dataEntryFine
+        case .volume: return .volumeFine
+        case .balance: return .balanceFine
+        case .pan: return .panFine
+        case .expression: return .expressionFine
+        case .effect1: return .effect1Fine
+        case .effect2: return .effect2Fine
+        default: return nil
+        }
+    }
+
+}

@@ -17,6 +17,10 @@ public class LMIDIInput {
     
     private let portName: String
     private var port: MIDIPortRef
+    
+    /// An optional object that tracks controller state. This is not instantiated by default. Attach a new instance here if you would like to have this processing happen automatically when messages come in on this input (_before_ your listen block is called).
+    public var controllerState: LMIDIControllerState?
+    
     private var listenBlock: ([LMIDIMessage]) -> ()
     
     /// Instantiate an input using the given port name, to be attached to the given source. Does not automatically start listening. Call `listen(_:)` and `stop()` to start and stop.
@@ -35,6 +39,13 @@ public class LMIDIInput {
                 let newMessages = LMIDIMessage.fromRawPacket(packet.pointee)
                 messages.append(contentsOf: newMessages)
                 packet = MIDIPacketNext(packet)
+            }
+            if let controllerState = self.controllerState {
+                for msg in messages {
+                    if case .controller(let channel, let type, let value) = msg {
+                        controllerState.setValue(channel: channel, type: type, value: value)
+                    }
+                }
             }
             weakSelf?.listenBlock(messages)
         })
