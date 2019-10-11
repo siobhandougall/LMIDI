@@ -130,6 +130,8 @@ extension LMIDIController {
         case .expression: return .expressionFine
         case .effect1: return .effect1Fine
         case .effect2: return .effect2Fine
+        case .nrpnCoarse: return .nrpnFine
+        case .rpnCoarse: return .rpnFine
         default: return nil
         }
     }

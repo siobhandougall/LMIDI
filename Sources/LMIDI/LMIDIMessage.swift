@@ -41,7 +41,7 @@ public enum LMIDIMessage {
     /// - `channel`: ranges from 0-15.
     /// - `type`: the MIDI controller type.
     /// - `value`: the value of this controller message.
-    /// Note: Coarse/fine messages are treated as separate controller changes. Reconstructing the full 14-bit value is left to the caller.
+    /// Note: Coarse/fine messages are treated as separate controller changes. You may optionally use an instance of `LMIDIControllerState`to manage these message pairs.
     case controller(channel: UInt, type: LMIDIController, value: UInt)
     
     /// A program change message.

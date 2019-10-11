@@ -27,6 +27,7 @@ public class LMIDIControllerState {
     }()
     
     /// Set a received value. This happens automatically if attached to a LMIDIInput instance.
+    /// Note: NRPN and RPN messages are treated like any other controller (including coarse/fine pairings). `LMIDIControllerState` does not attempt to process these parameter changes, beyond tracking their receipt.
     public func setValue(channel: UInt, type: LMIDIController, value: UInt) {
         if type == .allControllersOff {
             self.reset()
@@ -63,6 +64,7 @@ public class LMIDIControllerState {
     }
     
     /// Set all values on all channels to their starting defaults. This is also called when `setValue(channel:type:)` receives a message of type `.allControllersOff` (cc 121).
+    /// Note: This does not reset non-controller state, such as pitch wheel and channel pressure.
     public func reset() {
         self.values = LMIDIControllerState.defaultValues
     }

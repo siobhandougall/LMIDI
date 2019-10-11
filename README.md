@@ -44,6 +44,19 @@ MIDI message types are enumerated by `LMIDIMessage`. This includes SysEx message
 
 Note that channel numbers range from 0-15 (matching the MIDI data), not 1-16 (matching traditional UI display). You will need to add 1 to the channel number when formatting for display to the user. 
 
+## MIDI controller handling
+
+Incoming controller messages get passed to your `input.listen` block, just like any other message. But if you would like to have LMIDI keep track of controller state, you can use an instance of the `LMIDIControllerState` class to do so. This object will track coarse/fine pairings and manage reconstructing 14-bit values for those controllers.
+
+`LMIDIControllerState` can be used the hard way, or you can simply attach one to your input in order to have it process all incoming messages automatically:
+
+    let input = try LMIDIInput(...
+    input.controllerState = LMIDIControllerState()
+    try input.listen { messages in
+        // Messages are processed by the controllerState object before this code is called
+        print("\(input.controllerState!.getNormalizedValue(channel: 0, type: .volume)") // Returns a value within [0.0, 1.0]
+    }
+
 ## Known issues
 
 `LMIDIConfig` is meant to provide notifications of changes in configuration state; this is not yet implemented.
