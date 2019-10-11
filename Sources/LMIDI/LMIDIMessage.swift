@@ -39,10 +39,10 @@ public enum LMIDIMessage {
         
     /// A MIDI controller (cc) message.
     /// - `channel`: ranges from 0-15.
-    /// - `number`: MIDI controller number.
+    /// - `type`: the MIDI controller type.
     /// - `value`: the value of this controller message.
     /// Note: NRPN messages are treated as separate controller changes. Reconstructing them is left to the caller.
-    case controller(channel: UInt, number: UInt, value: UInt)
+    case controller(channel: UInt, type: LMIDIController, value: UInt)
     
     /// A program change message.
     /// - `channel`: ranges from 0-15.
@@ -124,7 +124,7 @@ public enum LMIDIMessage {
         case 0xa0...0xaf:
             return .aftertouch(channel: channelNibble, note: UInt(data[1]), pressure: UInt(data[2]))
         case 0xb0...0xbf:
-            return .controller(channel: channelNibble, number: UInt(data[1]), value: UInt(data[2]))
+            return .controller(channel: channelNibble, type: LMIDIController(number: UInt(data[1])), value: UInt(data[2]))
         case 0xc0...0xcf:
             return .programChange(channel: channelNibble, number: UInt(data[1]))
         case 0xd0...0xdf:
@@ -220,9 +220,9 @@ public enum LMIDIMessage {
             bytes[0] = UInt8(channel | 0xa0)
             bytes[1] = UInt8(note)
             bytes[2] = UInt8(pressure)
-        case .controller(let channel, let number, let value):
+        case .controller(let channel, let type, let value):
             bytes[0] = UInt8(channel | 0xb0)
-            bytes[1] = UInt8(number)
+            bytes[1] = UInt8(type.rawValue)
             bytes[2] = UInt8(value)
         case .programChange(let channel, let number):
             bytes[0] = UInt8(channel | 0xb0)
