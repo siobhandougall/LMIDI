@@ -2,7 +2,7 @@
 //  File.swift
 //  
 //
-//  Created by Sean Dougall on 10/11/19.
+//  Created by Siobhán Dougall on 10/11/19.
 //
 
 import Foundation

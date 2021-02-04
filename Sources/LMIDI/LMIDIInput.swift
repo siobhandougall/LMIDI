@@ -2,7 +2,7 @@
 //  MIDIInput.swift
 //  Lapis
 //
-//  Created by Sean Dougall on 10/6/19.
+//  Created by Siobhán Dougall on 10/6/19.
 //  Copyright © 2019 Lapis. All rights reserved.
 //
 

@@ -2,7 +2,7 @@
 //  LMIDIObject.swift
 //  Lapis
 //
-//  Created by Sean Dougall on 10/7/19.
+//  Created by Siobhán Dougall on 10/7/19.
 //  Copyright © 2019 Lapis. All rights reserved.
 //
 
