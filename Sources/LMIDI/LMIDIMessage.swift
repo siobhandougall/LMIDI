@@ -108,8 +108,12 @@ public enum LMIDIMessage {
         while remainingBytes > 0 {
             let msg = parse(rawPacketData: bytes), bytesRead = msg.byteCount
             result.append(msg)
-            bytes.removeSubrange(0..<bytesRead)
-            remainingBytes -= bytesRead
+            if bytesRead <= remainingBytes {
+                bytes.removeSubrange(0..<bytesRead)
+                remainingBytes -= bytesRead
+            } else {
+                remainingBytes = 0
+            }
         }
         return result
     }
