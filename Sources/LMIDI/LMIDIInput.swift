@@ -34,11 +34,13 @@ public class LMIDIInput {
         let createErr = MIDIInputPortCreateWithBlock(self.source.config.client, self.portName as CFString, &self.port, { packetListPtr, refCon in
             var packetList = packetListPtr.pointee
             var messages = [LMIDIMessage]()
-            var packet = UnsafeMutablePointer(&packetList.packet)
-            for _ in 0..<packetList.numPackets {
-                let newMessages = LMIDIMessage.fromRawPacket(packet.pointee)
-                messages.append(contentsOf: newMessages)
-                packet = MIDIPacketNext(packet)
+            withUnsafeMutablePointer(to: &packetList.packet) { firstPacket in
+                var packet = firstPacket
+                for _ in 0..<packetList.numPackets {
+                    let newMessages = LMIDIMessage.fromRawPacket(packet.pointee)
+                    messages.append(contentsOf: newMessages)
+                    packet = MIDIPacketNext(packet)
+                }
             }
             if let controllerState = self.controllerState {
                 for msg in messages {

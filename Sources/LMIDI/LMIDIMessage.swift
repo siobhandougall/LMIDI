@@ -101,8 +101,8 @@ public enum LMIDIMessage {
     
     static func fromRawPacket(_ packet: MIDIPacket) -> [LMIDIMessage] {
         var d = packet.data
-        var bytes = [UInt8](UnsafeBufferPointer(start: &d.0, count: 256))
-       
+        var bytes: [UInt8] = withUnsafeBytes(of: &d) { [UInt8]($0) }
+
         var result = [LMIDIMessage]()
         var remainingBytes = Int(packet.length)
         while remainingBytes > 0 {
