@@ -20,4 +20,8 @@ public extension MIDIEndpointRef {
             }
         }
     }
+    
+    var uniqueID: Int {
+        return LMIDIObject.getIntegerProperty(name: kMIDIPropertyUniqueID, on: self)
+    }
 }

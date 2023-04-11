@@ -32,6 +32,15 @@ public class LMIDIConfig {
         return result
     }
     
+    public func inputSource(_ uniqueID: Int) -> LMIDISource? {
+        for src in inputSources {
+            if src.uniqueID == uniqueID {
+                return src
+            }
+        }
+        return nil
+    }
+    
     /// A list of all currently available MIDI destinations.
     public var outputDestinations: [LMIDIDestination] {
         var result = [LMIDIDestination]()
@@ -41,5 +50,14 @@ public class LMIDIConfig {
             result.append(LMIDIDestination(endpoint: endpoint, config: self))
         }
         return result
+    }
+    
+    public func outputDestination(_ uniqueID: Int) -> LMIDIDestination? {
+        for dest in outputDestinations {
+            if dest.uniqueID == uniqueID {
+                return dest
+            }
+        }
+        return nil
     }
 }

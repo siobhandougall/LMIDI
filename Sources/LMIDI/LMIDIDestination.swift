@@ -20,8 +20,10 @@ public struct LMIDIDestination {
     
     /// The display name of this destination endpoint.
     public var name: String {
-        get {
-            return endpoint.displayName
-        }
+        return endpoint.displayName
+    }
+    
+    public var uniqueID: Int {
+        return endpoint.uniqueID
     }
 }
